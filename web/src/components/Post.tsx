@@ -21,7 +21,7 @@ interface PostProps {
 
 
 export function Post({ author, content, publishedAt }: PostProps) {
-  const [comments, setComments] = useState(["oi"])
+  const [comments, setComments] = useState<string[]>([])
   const [newCommentText, setNewCommentText] = useState('')
 
   const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
@@ -41,9 +41,13 @@ export function Post({ author, content, publishedAt }: PostProps) {
     setNewCommentText('')
 
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleCreateNewChange(event: any) {
     setNewCommentText(event.target.value)
+  }
+
+  function deleteComment(comment: string) {
+    console.log(`deletar comentario: ${comment}`) 
   }
 
   return (
@@ -61,10 +65,12 @@ export function Post({ author, content, publishedAt }: PostProps) {
         </time>
       </header>
       <div className={s.content}>
-        {content.map((line, index) => {
+        {content.map(line => {
           if (line.type === "paragraph") {
-            return <p key={index} >{line.content}</p>
-          } return <p key={index}><a href="#">{line.content}</a></p>
+            return <p key={line.content} >{line.content}</p>
+          } else if(line.type === 'link') {
+            return <p key={line.content}><a href="#">{line.content}</a></p>
+          } 
         })}
       </div>
 
@@ -81,13 +87,8 @@ export function Post({ author, content, publishedAt }: PostProps) {
       </form>
 
       <div className={s.commentList}>
-        {comments.map((comments, index) => {
-          return (
-          <Comment
-            key={index}
-            content={comments}
-            />
-          )
+        {comments.map(comment => {
+          return <Comment key={comment} content={comment} onDeleteComment={deleteComment} />
         })}
       </div>
     </article>

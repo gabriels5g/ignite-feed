@@ -4,9 +4,16 @@ import { ThumbsUp, Trash } from '@phosphor-icons/react'
 
 interface CommentProps {
   content: string
+  onDeleteComment: (comment: string) => void
 }
 
-export function Comment(props: CommentProps) {
+
+export function Comment({onDeleteComment, content}: CommentProps) {
+
+  function handleDeleteComment() {
+    onDeleteComment(content)
+  }
+
   return (
     <div className={s.comment}>
       <Avatar hasBorder={false} src="https://avatars.githubusercontent.com/u/89154785?v=4" />
@@ -17,15 +24,15 @@ export function Comment(props: CommentProps) {
               <strong>Karol</strong>
               <time title="09 de maio às 01:45" dateTime="2023/05/09 08:13:44">Cerca de 2h atrás</time>
             </div>
-            <button title="Deletar comentario">
+            <button onClick={handleDeleteComment} title="Deletar comentario">
               <Trash size={24}/>
             </button>
           </header>
-          <p>{props.content}</p>
+          <p>{content}</p>
         </div>
         <footer>
 
-          <button title="Deletar comentario">
+          <button onClick={handleDeleteComment} title="Deletar comentario">
             <ThumbsUp/>
             Aplaudir <span>20</span>
           </button>
